@@ -1,4 +1,4 @@
-## SPRINT MISSION 1
+## SPRINT MISSION 1-2
 **NB 2기 강시연**
 
 - **언어** : JavaScript
