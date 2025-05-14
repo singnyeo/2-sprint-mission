@@ -1,4 +1,3 @@
-
 ## 요구사항
 
 ### 기본
@@ -11,8 +10,6 @@
     - [x]  Article 클래스는 `like` 메소드를 가집니다. `like` 메소드가 호출될 경우 좋아요 수가 1 증가합니다.
 - [x]  각 클래스 마다 **constructor**를 작성해 주세요.
 - [x]  추상화/캡슐화/상속/다형성을 고려하여 코드를 작성해 주세요.
-
-
 - [x]  'https://panda-market-api-crud.vercel.app/docs' 의 Article API를 이용하여 아래 함수들을 구현해 주세요.
     - [x]  `getArticleList()` : GET 메소드를 사용해 주세요.
         - [x]  `page`, `pageSize`, `keyword` 쿼리 파라미터를 이용해 주세요.
@@ -25,8 +22,6 @@
     - [x]  응답의 상태 코드가 2XX가 아닐 경우, 에러 메시지를 콘솔에 출력해 주세요.
 - [x]  `.then()` 메소드를 이용하여 비동기 처리를 해주세요.
 - [x]  `.catch()` 를 이용하여 오류 처리를 해주세요.
-
-
 - [x]  'https://panda-market-api-crud.vercel.app/docs' 의 Product API를 이용하여 아래 함수들을 구현해 주세요.
     - [x]   `getProductList()` : GET 메소드를 사용해 주세요.
         - [x]   `page`, `pageSize`, `keyword` 쿼리 파라미터를 이용해 주세요.
@@ -37,19 +32,13 @@
     - [x]   `deleteProduct()` : DELETE 메소드를 사용해 주세요.
 - [x]  `async/await` 을 이용하여 비동기 처리를 해주세요.
 - [x]  `try/catch` 를 이용하여 오류 처리를 해주세요.
-
-
 - [x]  `getProductList()`를 통해서 받아온 상품 리스트를 각각 인스턴스로 만들어 `products` 배열에 저장해 주세요.
     - [x]  해시태그에 "**전자제품**"이 포함되어 있는 상품들은 `Product` 클래스 대신 `ElectronicProduct` 클래스를 사용해 인스턴스를 생성해 주세요.
     - [x]  나머지 상품들은 모두 `Product` 클래스를 사용해 인스턴스를 생성해 주세요.
-
-
 - [x]  구현한 함수들을 아래와 같이 파일을 분리해 주세요.
     - [x]  **export**를 활용해 주세요.
     - [x]  `ProductService.js` 파일 **Product** API 관련 함수들을 작성해 주세요.
     - [x]  `ArticleService.js` 파일에 **Article** API 관련 함수들을 작성해 주세요.
-
-
 - [x]  이외의 코드들은 모두 `main.js` 파일에 작성해 주세요.
     - [x]   **import**를 활용해 주세요.
     - [x]   각 함수를 실행하는 코드를 작성하고, 제대로 동작하는지 확인해 주세요.
@@ -59,10 +48,8 @@
     - [x]  새로운 객체가 생성되어 constructor가 호출될 시 `createdAt`에 현재 시간을 저장합니다.
 
 ## 주요 변경사항
-
-## 스크린샷
+- 처음으로 GitHub에서 fork → clone → commit → push → PR의 흐름을 따라가며 과제를 제출해보았습니다. 
 
 ## 멘토에게
 - 기능이 되도록 작성하려고 했지만 실행이 안되는 중입니다.
-- 아직 제가 무엇을 모르는지 모르는 상태 입니다.
-- 매운맛🔥: 뒤는 없습니다. 그냥 필터 없이 말해주세요. 책임은 제가 집니다.
+- 아직 제가 무엇을 모르는지 모르는 상태 입니다. 부족한 점이 있다면 알려주시면 감사하겠습니다
