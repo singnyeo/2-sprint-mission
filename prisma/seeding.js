@@ -2,12 +2,10 @@ const { PrismaClient } = require('../generated/prisma');
 const prisma = new PrismaClient();
 
 async function main() {
-
   await prisma.comment.deleteMany();
   await prisma.article.deleteMany();
   await prisma.product.deleteMany();
   await prisma.file.deleteMany();
-
 
   const product1 = await prisma.product.create({
     data: {
@@ -38,12 +36,14 @@ async function main() {
           },
         ],
       },
-      comment: {
-        create: [
-          { content: "이 노트북 살까 고민 중이에요" }
-        ],
-      },
     },
+  });
+
+  await prisma.comment.createMany({
+    data: Array.from({ length: 20 }, (_, i) => ({
+      productId: product1.id,
+      content: `노트북 댓글 ${i + 1}`,
+    })),
   });
 
   const product2 = await prisma.product.create({
@@ -65,12 +65,14 @@ async function main() {
           },
         ],
       },
-      comment: {
-        create: [
-          { content: "비싸요" }
-        ],
-      },
     },
+  });
+
+  await prisma.comment.createMany({
+    data: Array.from({ length: 20 }, (_, i) => ({
+      productId: product2.id,
+      content: `스마트폰 댓글 ${i + 1}`,
+    })),
   });
 
   console.log("시딩 완료!");
