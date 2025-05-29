@@ -18,21 +18,10 @@ async function main() {
           {
             title: "삼성 노트북",
             content: "좋아요",
-            comment: {
-              create: [
-                { content: "댓글 1" },
-                { content: "댓글 2" },
-              ],
-            },
           },
           {
             title: "노트북 사용 팁",
             content: "효율적인 사용법 공유합니다.",
-            comment: {
-              create: [
-                { content: "유용한 정보 감사합니다." }
-              ],
-            },
           },
         ],
       },
@@ -57,11 +46,6 @@ async function main() {
           {
             title: "스마트폰 카메라 리뷰",
             content: "사진 품질이 아주 뛰어납니다.",
-            comment: {
-              create: [
-                { content: "굿" }
-              ],
-            },
           },
         ],
       },
