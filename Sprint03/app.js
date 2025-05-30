@@ -4,11 +4,11 @@ var logger = require("./utils/logger");
 var path = require("path");
 
 const cors = require("cors");
-const productRouter = require("./routes/products");
-const articlesRouter = require("./routes/articles");
-const productCommentRouter = require("./routes/comments/productComments");
-const articleCommentRouter = require("./routes/comments/articleComments");
-const filesRouter = require("./routes/files");
+const productRouter = require("../routes/products");
+const articlesRouter = require("../routes/articles");
+const productCommentRouter = require("../routes/comments/productComments");
+const articleCommentRouter = require("../routes/comments/articleComments");
+const filesRouter = require("../routes/files");
 const errorHandler = require("./utils/errorHandler");
 
 var app = express();
