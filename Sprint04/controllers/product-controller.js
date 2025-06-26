@@ -55,3 +55,24 @@ export async function updateProduct(req, res) {
     res.status(500).json({ message: '서버 에러. 잠시 후 다시 시도해주세요.' });
   }
 }
+
+export async function deleteProduct(req, res) {
+  const productId = parseInt(req.params.id);
+
+  try {
+    const product = await prisma.product.findUnique({ where: { id: productId } });
+    if (!product) {
+      return res.status(404).json({ message: '상품을 찾을 수 없습니다.' });
+    }
+
+    if (product.userId !== req.user.id) {
+      return res.status(403).json({ message: '삭제 권한이 없습니다.' });
+    }
+
+    await prisma.product.delete({ where: { id: productId } });
+    res.status(200).json({ message: '상품 삭제 완료' });
+  } catch (error) {
+    console.error('상품 삭제 실패:', error);
+    res.status(500).json({ message: '서버 에러. 잠시 후 다시 시도해주세요.' });
+  }
+}
