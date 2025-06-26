@@ -1,8 +1,6 @@
 import bcrypt from 'bcrypt';
-import jwt from 'jsonwebtoken';
 import prisma from '../lib/prisma.js';
-
-const ACCESS_TOKEN_SECRET = process.env.ACCESS_TOKEN_SECRET;
+import { generateTokens, verifyRefreshToken } from '../lib/token.js';
 
 export async function register(req, res) {
   const { email, nickname, password, image } = req.body;
@@ -24,12 +22,7 @@ export async function register(req, res) {
 
     const hashedPassword = await bcrypt.hash(password, 10);
     const user = await prisma.user.create({
-      data: {
-        email,
-        nickname,
-        image,
-        password: hashedPassword,
-      },
+      data: { email, nickname, image, password: hashedPassword },
     });
 
     const { password: _, ...userWithoutPassword } = user;
@@ -49,8 +42,7 @@ export async function login(req, res) {
 
   try {
     const user = await prisma.user.findUnique({ where: { email } });
-
-    if (!user) {
+    if (!user || !user.password) {
       return res.status(401).json({ message: '이메일 또는 비밀번호가 잘못되었습니다.' });
     }
 
@@ -59,15 +51,42 @@ export async function login(req, res) {
       return res.status(401).json({ message: '이메일 또는 비밀번호가 잘못되었습니다.' });
     }
 
-    const accessToken = jwt.sign(
-      { id: user.id, email: user.email },
-      ACCESS_TOKEN_SECRET,
-      { expiresIn: '1h' }
-    );
+    const tokens = generateTokens(user.id);
 
-    res.status(200).json({ accessToken });
+    res.status(200).json(tokens);
   } catch (error) {
     console.error('로그인 에러:', error);
     res.status(500).json({ message: '서버 에러. 잠시 후 다시 시도해주세요.' });
   }
+}
+
+export async function refreshTokens(req, res) {
+  const { refreshToken } = req.body;
+
+  if (!refreshToken) {
+    return res.status(400).json({ message: 'Refresh Token이 필요합니다.' });
+  }
+
+  try {
+    const payload = verifyRefreshToken(refreshToken);
+    if (!payload) {
+      return res.status(401).json({ message: '유효하지 않은 Refresh Token입니다.' });
+    }
+
+    const user = await prisma.user.findUnique({ where: { id: payload.userId } });
+    if (!user) {
+      return res.status(401).json({ message: '사용자를 찾을 수 없습니다.' });
+    }
+
+    const tokens = generateTokens(user.id);
+
+    res.status(200).json(tokens);
+  } catch (error) {
+    console.error('토큰 갱신 에러:', error);
+    res.status(500).json({ message: '서버 에러. 잠시 후 다시 시도해주세요.' });
+  }
+}
+
+export async function logout(req, res) {
+  res.status(200).json({ message: '로그아웃 성공' });
 }
