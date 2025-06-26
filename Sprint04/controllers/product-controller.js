@@ -1,3 +1,4 @@
+import prisma from '../lib/prisma.js';
 export async function createProduct(req, res) {
   console.log('req.user:', req.user);
   const { name, description, price, tags } = req.body;
