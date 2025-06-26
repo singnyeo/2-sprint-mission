@@ -1,5 +1,5 @@
 import jwt from 'jsonwebtoken';
-import { ACCESS_TOKEN_SECRET, REFRESH_TOKEN_SECRET } from '../constants.js';
+import { ACCESS_TOKEN_SECRET, REFRESH_TOKEN_SECRET } from './constants.js';
 
 const ACCESS_TOKEN_EXPIRES_IN = '1h';
 const REFRESH_TOKEN_EXPIRES_IN = '7d';

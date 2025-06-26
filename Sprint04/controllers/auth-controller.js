@@ -1,6 +1,7 @@
 import bcrypt from 'bcrypt';
 import prisma from '../lib/prisma.js';
-import { generateTokens, verifyRefreshToken } from '../lib/token.js';
+import { generateTokens } from '../lib/token.js';
+import { ACCESS_TOKEN_COOKIE_NAME, REFRESH_TOKEN_COOKIE_NAME, NODE_ENV } from '../lib/constants.js';
 
 export async function register(req, res) {
   const { email, nickname, password, image } = req.body;
@@ -53,7 +54,19 @@ export async function login(req, res) {
 
     const tokens = generateTokens(user.id);
 
-    res.status(200).json(tokens);
+    res.cookie(ACCESS_TOKEN_COOKIE_NAME, tokens.accessToken, {
+      httpOnly: true,
+      secure: NODE_ENV === 'production',
+      maxAge: 60 * 60 * 1000,
+    });
+    res.cookie(REFRESH_TOKEN_COOKIE_NAME, tokens.refreshToken, {
+      httpOnly: true,
+      secure: NODE_ENV === 'production',
+      maxAge: 7 * 24 * 60 * 60 * 1000,
+      path: '/auth/refresh',
+    });
+
+    res.status(200).json({ message: '로그인 성공' });
   } catch (error) {
     console.error('로그인 에러:', error);
     res.status(500).json({ message: '서버 에러. 잠시 후 다시 시도해주세요.' });
@@ -80,7 +93,19 @@ export async function refreshTokens(req, res) {
 
     const tokens = generateTokens(user.id);
 
-    res.status(200).json(tokens);
+    res.cookie(ACCESS_TOKEN_COOKIE_NAME, tokens.accessToken, {
+      httpOnly: true,
+      secure: NODE_ENV === 'production',
+      maxAge: 60 * 60 * 1000,
+    });
+    res.cookie(REFRESH_TOKEN_COOKIE_NAME, tokens.refreshToken, {
+      httpOnly: true,
+      secure: NODE_ENV === 'production',
+      maxAge: 7 * 24 * 60 * 60 * 1000,
+      path: '/auth/refresh',
+    });
+
+    res.status(200).json({ message: '토큰 갱신 성공' });
   } catch (error) {
     console.error('토큰 갱신 에러:', error);
     res.status(500).json({ message: '서버 에러. 잠시 후 다시 시도해주세요.' });
@@ -88,5 +113,7 @@ export async function refreshTokens(req, res) {
 }
 
 export async function logout(req, res) {
+  res.clearCookie(ACCESS_TOKEN_COOKIE_NAME);
+  res.clearCookie(REFRESH_TOKEN_COOKIE_NAME);
   res.status(200).json({ message: '로그아웃 성공' });
 }
