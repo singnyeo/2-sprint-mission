@@ -5,11 +5,12 @@ import {
   getArticles,
   getArticleById,
   updateArticle,
-  deleteArticle,
+  deleteArticle
 } from '../controllers/article-controller.js';
+import { getLikedArticles } from '../controllers/like-controller.js';
 
 const router = express.Router();
-
+router.get('/articles/liked', authenticate, getLikedArticles);
 router.post('/articles', authenticate, createArticle);
 router.get('/articles', getArticles);
 router.get('/articles/:id', getArticleById);

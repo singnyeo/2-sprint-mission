@@ -74,3 +74,34 @@ export async function deleteProduct(req, res) {
     res.status(500).json({ message: '상품 삭제 실패. 서버 에러. 잠시 후 다시 시도해주세요.' });
   }
 }
+
+export async function getProductById(req, res) {
+  const productId = parseInt(req.params.id);
+  const userId = req.user?.id;
+
+  try {
+    const product = await prisma.product.findUnique({
+      where: { id: productId },
+      include: {
+        user: { select: { id: true, nickname: true, image: true } },
+        likes: true,
+      },
+    });
+
+    if (!product) return res.status(404).json({ message: '상품을 찾을 수 없습니다.' });
+
+    const isLiked = userId ? product.likes.some((like) => like.userId === userId) : false;
+
+    const response = {
+      ...product,
+      isLiked,
+    };
+
+    delete response.likes;
+
+    res.status(200).json(response);
+  } catch (error) {
+    console.error('상품 조회 실패:', error);
+    res.status(500).json({ message: '서버 에러' });
+  }
+}

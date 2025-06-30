@@ -45,29 +45,33 @@ export async function getArticles(req, res) {
 
 export async function getArticleById(req, res) {
   const articleId = parseInt(req.params.id);
+  const userId = req.user?.id;
 
   try {
     const article = await prisma.article.findUnique({
       where: { id: articleId },
       include: {
-        user: {
-          select: { id: true, nickname: true, image: true },
-        },
-        product: {
-          select: { id: true, name: true },
-        },
+        user: { select: { id: true, nickname: true, image: true } },
+        likes: true,
         comment: true,
+        product: { select: { id: true, name: true } },
       },
     });
 
-    if (!article) {
-      return res.status(404).json({ message: '게시글을 찾을 수 없습니다.' });
-    }
+    if (!article) return res.status(404).json({ message: '게시글을 찾을 수 없습니다.' });
 
-    res.status(200).json(article);
+    const isLiked = userId ? article.likes.some(like => like.userId === userId) : false;
+
+    const response = {
+      ...article,
+      isLiked,
+    };
+    delete response.likes;
+
+    res.status(200).json(response);
   } catch (error) {
     console.error('게시글 조회 실패:', error);
-    res.status(500).json({ message: '게시글 조회 실패. 서버 에러. 잠시 후 다시 시도해주세요.' });
+    res.status(500).json({ message: '서버 에러' });
   }
 }
 
