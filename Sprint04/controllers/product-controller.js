@@ -1,6 +1,6 @@
 import prisma from '../lib/prisma.js';
+
 export async function createProduct(req, res) {
-  console.log('req.user:', req.user);
   const { name, description, price, tags } = req.body;
 
   if (!name || !description || !price) {
@@ -17,11 +17,10 @@ export async function createProduct(req, res) {
         userId: req.user.id,
       },
     });
-    console.log('상품 등록 완료:', product);
-    return res.status(201).json(product);
+    res.status(201).json({ message: '상품 등록 완료', product });
   } catch (error) {
     console.error('상품 등록 실패:', error);
-    return res.status(500).json({ message: '서버 에러. 잠시 후 다시 시도해주세요.' });
+    res.status(500).json({ message: '상품 등록 실패. 서버 에러. 잠시 후 다시 시도해주세요.' });
   }
 }
 
@@ -36,7 +35,7 @@ export async function updateProduct(req, res) {
     }
 
     if (product.userId !== req.user.id) {
-      return res.status(403).json({ message: '수정 권한이 없습니다.' });
+      return res.status(403).json({ message: '상품 수정 권한이 없습니다.' });
     }
 
     const updatedProduct = await prisma.product.update({
@@ -48,11 +47,10 @@ export async function updateProduct(req, res) {
         tags,
       },
     });
-    console.log('상품 수정 완료:', updatedProduct);
-    res.status(200).json(updatedProduct);
+    res.status(200).json({ message: '상품 수정 완료', product: updatedProduct });
   } catch (error) {
     console.error('상품 수정 실패:', error);
-    res.status(500).json({ message: '서버 에러. 잠시 후 다시 시도해주세요.' });
+    res.status(500).json({ message: '상품 수정 실패. 서버 에러. 잠시 후 다시 시도해주세요.' });
   }
 }
 
@@ -66,13 +64,13 @@ export async function deleteProduct(req, res) {
     }
 
     if (product.userId !== req.user.id) {
-      return res.status(403).json({ message: '삭제 권한이 없습니다.' });
+      return res.status(403).json({ message: '상품 삭제 권한이 없습니다.' });
     }
 
     await prisma.product.delete({ where: { id: productId } });
     res.status(200).json({ message: '상품 삭제 완료' });
   } catch (error) {
     console.error('상품 삭제 실패:', error);
-    res.status(500).json({ message: '서버 에러. 잠시 후 다시 시도해주세요.' });
+    res.status(500).json({ message: '상품 삭제 실패. 서버 에러. 잠시 후 다시 시도해주세요.' });
   }
 }
